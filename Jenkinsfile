@@ -1,34 +1,38 @@
 pipeline {
     agent any
 
+    // Define custom environment variables
+    environment {
+        APP_VERSION = '1.0.3'       // Example application version
+        DEPLOY_ENV = 'staging'      // Deployment environment
+        AUTHOR_NAME = 'Shaheer Baig' // Example author name
+    }
+
     stages {
         stage('Build') {
             steps {
-                echo 'Building...'
-                bat 'echo Build process completed!'
+                echo "Building version: ${env.APP_VERSION}"
+                echo "Author: ${env.AUTHOR_NAME}"
+                // Your build logic here
+                bat 'echo Build successful'
             }
         }
 
         stage('Test') {
-            when {
-                allOf {
-                    expression { env.BRANCH_NAME == 'main' }
-                    not {
-                        expression { env.SKIP_TESTS == 'true' }
-                    }
-                }
-            }
             steps {
-                echo 'Testing...'
-                bat 'echo Running test cases!'
+                echo "Running tests for version: ${env.APP_VERSION}"
+                // Your test logic here
+                bat 'echo All tests passed'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying...'
-                bat 'echo Deployment process completed!'
+                echo "Deploying version: ${env.APP_VERSION} to environment: ${env.DEPLOY_ENV}"
+                // Your deployment logic here
+                bat 'echo Deployment done'
             }
         }
     }
 }
+SS
