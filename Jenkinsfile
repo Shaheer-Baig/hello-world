@@ -5,34 +5,30 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                // Add your build steps here
+                sh 'echo "Build process completed!"'
             }
         }
+
         stage('Test') {
+            when {
+                allOf {
+                    expression { env.BRANCH_NAME == 'main' } // Run only on 'main' branch
+                    not {
+                        expression { env.SKIP_TESTS == 'true' } // Skip if SKIP_TESTS is true
+                    }
+                }
+            }
             steps {
                 echo 'Testing...'
-                // Add your test steps here
+                sh 'echo "Running test cases!"'
             }
         }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
-                // Add your deploy steps here
+                sh 'echo "Deployment process completed!"'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Build succeeded!'
-        }
-        failure {
-            echo 'Build failed! Notifying the team...'
-            // Add failure-specific steps here, e.g., sending an email or Slack notification
-        }
-        always {
-            echo 'Cleaning up workspace...'
-            cleanWs() // Cleans up the workspace after the build
         }
     }
 }
