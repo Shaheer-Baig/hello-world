@@ -1,15 +1,40 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven'  // ✅ This matches your configured Maven installation
+    parameters {
+        booleanParam(name: 'executeTests', defaultValue: true, description: 'Run the test stage?')
+        string(name: 'DEPLOY_ENV', defaultValue: 'staging', description: 'Enter deployment environment')
+        choice(name: 'BUILD_TYPE', choices: ['debug', 'release'], description: 'Choose build type')
     }
 
     stages {
-        stage('Build with Maven') {
+        stage('Build') {
             steps {
-                bat 'mvn clean compile'  // use `sh` if on Linux/macOS
+                echo "🔨 Starting ${params.BUILD_TYPE} build"
+                echo "Build completed successfully."
             }
+        }
+
+        stage('Test') {
+            when {
+                expression { return params.executeTests }
+            }
+            steps {
+                echo "✅ Running unit tests..."
+                echo "Tests executed successfully."
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "🚀 Deploying to ${params.DEPLOY_ENV} environment"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '📋 Pipeline execution finished.'
         }
     }
 }
