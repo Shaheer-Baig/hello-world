@@ -1,22 +1,14 @@
 pipeline {
     agent any
-    environment {
-        VERSION = '1.0.0'
+
+    tools {
+        maven 'Maven3' // Must match Maven name in Jenkins -> Global Tool Configuration
     }
+
     stages {
-        stage('Build') {
+        stage('Build with Maven') {
             steps {
-                echo "Building version ${VERSION}"
-            }
-        }
-        stage('Test') {
-            steps {
-                echo "Testing version ${VERSION}"
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo "Deploying version ${VERSION}"
+                bat 'mvn clean compile' // use `sh` if on Linux/macOS
             }
         }
     }
